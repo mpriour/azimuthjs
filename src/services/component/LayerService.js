@@ -9,7 +9,13 @@ service.factory('az.services.layers', function($rootScope) {
     var layerService = {
     	layers: [],
     	getMapLayers: function(){
-
+    		var lyrs = [];
+    		$.each(this.layers,function(i,lyr){
+    			if(lyr.mapLayer !== false){
+    				lyrs.push(lyr);
+    			}
+    		});
+    		return lyrs;
     	}
     };
     return layerService;
