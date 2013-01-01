@@ -57,7 +57,10 @@
 						delete opts.subdomains;
 						$.each(subdomains, function(index, val) {
 							urls[index] = OpenLayers.String.format(url,{
-								's': val
+								s: val,
+								x:'${x}',
+								y:'${y}',
+								z:'${z}'
 							});
 						})
 					} else {
