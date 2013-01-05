@@ -19,7 +19,12 @@
 	<script type="text/javascript" src="src/module.js"></script>
 </head>
 <body>
-<az-layer name="streets" lyr-type="tiles"></az-layer>
-<div ol-map zoom="15" center="-0,51.48"></div>
+<div ol-map controls="zoom,navigation,layerSwitcher,attribution,mousePosition" control-opts="{navigation:{handleRightClicks:true}}">
+	<az-layer name="Street" lyr-type="tiles"></az-layer>
+	<az-layer name="Aerial" lyr-type="tiles" lyr-url="http://otile${s}.mqcdn.com/tiles/1.0.0/sat/${z}/${x}/${y}.png"></az-layer>
+	<az-layer name="Radar"  lyr-type="wms" lyr-url="http://gis.srh.noaa.gov/ArcGIS/services/Radar_warnings/MapServer/WMSServer"
+		layers="0,1" version="1.3.0" crs="EPSG:102100" transparent="true" opacity="0.75"></az-layer>
+	<az-layer name="Airports" lyr-type="geojson" lyr-url="examples/data/airports.json" projection="EPSG:4326"></az-layer>
+</div>
 </body>
 </html>
