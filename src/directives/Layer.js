@@ -5,13 +5,21 @@
  */
 (function() {
 
-	var mod = angular.module('az.directives',['az.services']);
+angular.module('az.directives').
+	directive('azLayer', ['az.config','az.services.layers', '$parse', function(config,layerService, $parse) {
+		var defaults = config.defaults;
+		var MAP_DIRECTIVES = ['ol-map','leaflet-map']
+		var inmapQuery = '';
+		$.each(MAP_DIRECTIVES, function(n, val){
+			if(n>0) inmapQuery += ',';
+			inmapQuery += '*[' + val + '], ' + val;
+		});
 
-	mod.directive('azLayer', ['az.services.layers', '$parse', function(layerService, $parse) {
 		return {
 			restrict: 'EA',
 			replace: true,
 			html: '',
+			scope:{},
 			link: function(scope, elem, attrs) {
 				var m = $parse(attrs);
 				var opts = angular.extend({}, attrs, $parse(attrs.lyrOptions)());
@@ -19,12 +27,13 @@
 				var url = attrs.lyrUrl;
 				var name = attrs.name;
 				var layers = layerService.layers;
+				var inmap = elem.parents(inmapQuery).length>0;
 				var layer;
-				if(opts.isBaseLayer){opts.isBaseLayer = eval(opts.isBaseLayer)}
+				if(opts.isBaseLayer){opts.isBaseLayer = $parse(opts.isBaseLayer)()}
 				switch(type) {
 				case 'geojson':
 					var lyrOptKeys = ['style', 'styleMap', 'filter', 'projection'];
-					var lyrOpt = {};
+					var lyrOpt = {'mapLayer':inmap};
 					$.each(lyrOptKeys, function(index, val) {
 						if(val in opts) {
 							lyrOpt[val] = opts[val];
@@ -49,11 +58,12 @@
 						}
 					});
 					layer = new OpenLayers.Layer.WMS(name, url, params, opts);
+					layer.mapLayer = inmap;
 					break;
 				case 'tiles':
-					var subdomains = opts.subdomains !== false && (opts.subdomains || [1, 2, 3, 4]);
+					var subdomains = opts.subdomains !== false && (opts.subdomains || defaults.SUBDOMAINS);
 					if(!url) {
-						url = "http://otile${s}.mqcdn.com/tiles/1.0.0/map/${z}/${x}/${y}.png"
+						url = defaults.TILE_URL
 					}
 					var urls = [];
 					if(subdomains) {
@@ -72,10 +82,11 @@
 
 
 					layer = new OpenLayers.Layer.XYZ(name, urls, angular.extend({
-						projection: 'EPSG:3857',
+						projection: 'EPSG:'+defaults.CRS,
 						transitionEffect: 'resize',
 						wrapDateLine: true
 					}, opts));
+					layer.mapLayer = inmap;
 					break;
 				}
 				layer && layers.push(layer);
