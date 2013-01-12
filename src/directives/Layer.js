@@ -34,7 +34,8 @@ angular.module('az.directives').
 				var name = attrs.name;
 				var layers = layerService.layers;
 				var inmap = elem.parents(inmapQuery).length>0;
-				var maplib = OpenLayers || L ? OpenLayers ? 'ol' : 'leaflet' : null;
+				var maplib = typeof(OpenLayers) != 'undefined' ? 'ol' : typeof(L) != 'undefined' ? 'leaflet' : null;
+				if(opts.maplib){maplib = opts.maplib}
 				if(opts.isBaseLayer){opts.isBaseLayer = $parse(opts.isBaseLayer)()}
 				var lyrConstruct;
 				switch(type){
@@ -106,6 +107,7 @@ angular.module('az.directives').
 				return layer
 			},
 		leaflet_wms = function(name, url, opts, inmap){
+				url = url.replace(/\${/g, '{');
 				var layer = L.tileLayer.wms(url, angular.extend({
 					mapLayer: inmap
 				}, opts));
@@ -144,8 +146,10 @@ angular.module('az.directives').
 				if(!url) {
 					url = defaults.TILE_URL
 				}
+				url = url.replace(/\${/g, '{');
 				var layer = L.tileLayer(url, angular.extend({
-					mapLayer: inmap
+					mapLayer: inmap,
+					'subdomains': subdomains
 				}, opts));
 				return layer;
 			}

@@ -7,7 +7,8 @@
 
 	var mod = angular.module('az.directives');
 
-	mod.directive('leafletMap', ['az.services.layers', '$parse', function(layerService, $parse) {
+	mod.directive('leafletMap', ['az.config','az.services.layers', '$parse', function(config, layerService, $parse) {
+		var defaults = config.defaults;
 		return {
 			restrict: 'EA',
 			priority: -10,
@@ -15,9 +16,9 @@
 				var layers = layerService.getMapLayers();
 				var center = attrs.center ? attrs.center.split(',') : defaults.CENTER.split(',');
 				var zoom = attrs.zoom || defaults.ZOOM;
-				var projection = attrs.projection || attrs.proj || attrs.crs || undefined;
-				var opts = angular.extend({}, $parse(attr.mapOpts)());
-				var map = L.Map(elem[0],angular.extend({
+				var projection = attrs.projection || attrs.proj || attrs.crs || L.CRS['EPSG'+defaults.CRS];
+				var opts = angular.extend({}, $parse(attrs.mapOpts)());
+				var map = L.map(elem[0],angular.extend({
 					'crs':projection,
 					'center':center,
 					'zoom':zoom,
