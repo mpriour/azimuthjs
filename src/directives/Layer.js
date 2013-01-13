@@ -21,14 +21,25 @@ angular.module('az.directives').
 			html: '',
 			scope:{},
 			link: function(scope, elem, attrs) {
-				var _attrs = {};
-				//filter out the prototype attributes
-				for(var k in attrs){
-					if(attrs.hasOwnProperty(k) && !angular.isObject(attrs[k]) && !angular.isFunction(attrs[k])){
-						_attrs[k]=attrs[k]
+				var opts = {};
+				//filter out the prototype attributes && evaluate attributes
+				$.each(attrs,function(key, val){
+					if(attrs.hasOwnProperty(key) && !angular.isObject(val) && !angular.isFunction(val)){
+						var pval;
+						try{
+							pval = scope.$eval(val);
+						} catch (e){
+							pval = undefined;
+						}
+						opts[key] = angular.isDefined(pval) ? pval : val;
+						//check for special case
+						//TODO may want a more generally applicable test
+						if(key == 'version' && isNaN(pval)){
+							opts[key] = val;
+						}
 					}
-				}
-				var opts = angular.extend({}, _attrs, $parse(attrs.lyrOptions)());
+				});
+				opts = angular.extend(opts, opts.lyrOptions);
 				var type = attrs.lyrType;
 				var url = attrs.lyrUrl;
 				delete opts.lyrOptions; delete opts.lyrType; delete opts.lyrUrl;
@@ -37,7 +48,6 @@ angular.module('az.directives').
 				var inmap = elem.parents(inmapQuery).length>0;
 				var maplib = typeof(OpenLayers) != 'undefined' ? 'ol' : typeof(L) != 'undefined' ? 'leaflet' : null;
 				if(opts.maplib){maplib = opts.maplib}
-				if(opts.isBaseLayer && angular.isString(opts.isBaseLayer)){opts.isBaseLayer = $parse(opts.isBaseLayer)()}
 				var lyrConstruct;
 				switch(type){
 					case 'tiles':
@@ -99,7 +109,7 @@ angular.module('az.directives').
 				var params = {};
 				$.each(paramKeys, function(index, val) {
 					if(val in opts) {
-						params[val] = val=='transparent' ? eval(opts[val]) : opts[val];
+						params[val] =  opts[val];
 						delete opts[val];
 					}
 				});
@@ -109,11 +119,8 @@ angular.module('az.directives').
 			},
 		leaflet_wms = function(name, url, opts, inmap){
 				url = url.replace(/\${/g, '{');
-				if(opts.transparent){
-					opts.transparent = eval(opts.transparent);
-					if(opts.transparent && (!opts.format || opts.format.indexOf('jpg')>-1)){
-						opts.format = 'image/png';
-					}
+				if(opts.transparent && (!opts.format || opts.format.indexOf('jpg')>-1)){
+					opts.format = 'image/png';
 				}
 				var layer = L.tileLayer.wms(url, angular.extend({
 					mapLayer: inmap
@@ -135,16 +142,13 @@ angular.module('az.directives').
 					url = defaults.TILE_URL
 				}
 				var urls = [];
-				if(subdomains) {
+				var splitUrl = url.split('${s}');
+				if(subdomains && splitUrl.length>1) {
 					delete opts.subdomains;
 					$.each(subdomains, function(index, val) {
-						urls[index] = OpenLayers.String.format(url,{
-							s: val,
-							x:'${x}',
-							y:'${y}',
-							z:'${z}'
-						});
-					})
+						urls[index] =
+							OpenLayers.String.format(splitUrl[0]+'${s}',angular.extend(opts,{s:val})) + splitUrl[1];
+					});
 				} else {
 					urls = [url]
 				}
