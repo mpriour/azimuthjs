@@ -24,19 +24,20 @@ angular.module('az.directives').
 				var _attrs = {};
 				//filter out the prototype attributes
 				for(var k in attrs){
-					if(attrs.hasOwnProperty(k)){
+					if(attrs.hasOwnProperty(k) && !angular.isObject(attrs[k]) && !angular.isFunction(attrs[k])){
 						_attrs[k]=attrs[k]
 					}
 				}
 				var opts = angular.extend({}, _attrs, $parse(attrs.lyrOptions)());
 				var type = attrs.lyrType;
 				var url = attrs.lyrUrl;
+				delete opts.lyrOptions; delete opts.lyrType; delete opts.lyrUrl;
 				var name = attrs.name;
 				var layers = layerService.layers;
 				var inmap = elem.parents(inmapQuery).length>0;
 				var maplib = typeof(OpenLayers) != 'undefined' ? 'ol' : typeof(L) != 'undefined' ? 'leaflet' : null;
 				if(opts.maplib){maplib = opts.maplib}
-				if(opts.isBaseLayer){opts.isBaseLayer = $parse(opts.isBaseLayer)()}
+				if(opts.isBaseLayer && angular.isString(opts.isBaseLayer)){opts.isBaseLayer = $parse(opts.isBaseLayer)()}
 				var lyrConstruct;
 				switch(type){
 					case 'tiles':
@@ -50,7 +51,7 @@ angular.module('az.directives').
 						break
 				}
 				var layer = lyrConstruct(name, url, opts, inmap);
-				if(layer){layers.push(layer);}
+				if(layer){layers[maplib=='ol' ? "push" : "unshift"](layer);}
 				console.log(layers);
 			}
 		};
@@ -75,7 +76,7 @@ angular.module('az.directives').
 			},
 		leaflet_geojson = function(name, url, opts, inmap){
 				var lyrOptKeys = ['pointToLayer','style','filter','onEachFeature'];
-				var lyrOpt = {'mapLayer':inmap};
+				var lyrOpt = {'mapLayer':inmap, name: opts.name || 'Vector'};
 				$.each(lyrOptKeys, function(index, val) {
 					if(val in opts) {
 						lyrOpt[val] = opts[val];
@@ -108,9 +109,24 @@ angular.module('az.directives').
 			},
 		leaflet_wms = function(name, url, opts, inmap){
 				url = url.replace(/\${/g, '{');
+				if(opts.transparent){
+					opts.transparent = eval(opts.transparent);
+					if(opts.transparent && (!opts.format || opts.format.indexOf('jpg')>-1)){
+						opts.format = 'image/png';
+					}
+				}
 				var layer = L.tileLayer.wms(url, angular.extend({
 					mapLayer: inmap
-				}, opts));
+				}, opts)).on('loading',function(e){
+					var lyr = e.target, projKey = lyr.wmsParams.version >= '1.3' ? 'crs' : 'srs';
+					if(opts[projKey] != lyr.wmsParams[projKey]){
+						//if someone went to the trouble to set it, let them keep it that way.
+						//lots of WMS servers only accept certain crs codes which are aliases
+						//for the ones defined in Leaflet. ie reject EPSG:3857 but accept EPSG:102113
+						lyr.wmsParams[projKey] = opts[projKey];
+					}
+				});
+				
 				return layer;
 			},
 		ol_tiles = function(name, url, opts, inmap){
