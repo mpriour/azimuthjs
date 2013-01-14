@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>AzimuthJS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+
+      }
+      pre{
+      	font-size: 125%;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">AzimuthJS</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <!-- <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li> -->
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      	<h1>AnzimuthJS</h1>
+		<p>The web map app companion to the <a href="http://angularjs.org">AngularJS</a> framework.</p>
+
+
+		<section id="directives-ol">
+				<div class="page-header">
+					<h1>OpenLayers Maps & Layers</h1>
+				</div>
+				<div class="row">
+					<div class="span6">
+						<h3>What?</h3>
+						<p>Static helper directives to create maps & layers</p>
+					</div>
+				</div>
+
+<h3>Super simple map</h3>				
+<a href="examples/olMap.html">olMap.html</a>
+<pre class="prettyprint linenums" ng-non-bindable>
+&lt;div ol-map&gt;
+	&lt;az-layer name="Street" lyr-type="tiles"&gt;&lt;/az-layer&gt;
+&lt;/div&gt;
+</pre>
+
+
+<h3>Lots of layers & options</h3>				
+<a href="examples/olMap_layers.html">olMap_layers.html</a>
+<pre class="prettyprint linenums" ng-non-bindable>
+&lt;div ol-map controls="zoom,navigation,layerSwitcher,attribution,mousePosition" control-opts="{navigation:{handleRightClicks:true}}"&gt;
+	&lt;az-layer name="Street" lyr-type="tiles"&gt;&lt;/az-layer&gt;
+	&lt;az-layer name="Aerial" lyr-type="tiles" lyr-url="http://otile${s}.mqcdn.com/tiles/1.0.0/sat/${z}/${x}/${y}.png"&gt;&lt;/az-layer&gt;
+	&lt;az-layer name="Radar"  lyr-type="wms" lyr-url="http://gis.srh.noaa.gov/ArcGIS/services/Radar_warnings/MapServer/WMSServer"
+		layers="0,1" version="1.3.0" crs="EPSG:102100" transparent="true" opacity="0.75"&gt;&lt;/az-layer&gt;
+	&lt;az-layer name="Airports" lyr-type="geojson" lyr-url="examples/data/airports.json" projection="EPSG:4326"&gt;&lt;/az-layer&gt;
+&lt;/div&gt;
+</pre>
+		
+
+		</section>
+
+				<section id="directives-leaflet">
+				<div class="page-header">
+					<h1>Leaflet Maps & Layers</h1>
+				</div>
+				<div class="row">
+					<div class="span6">
+						<h3>What?</h3>
+						<p>Static helper directives to create maps & layers</p>
+					</div>
+				</div>
+
+<h3>Super simple map</h3>				
+<a href="examples/leafletMap.html">leafletMap.html</a>
+<pre class="prettyprint linenums" ng-non-bindable>
+&lt;div leaflet-map&gt;
+	&lt;az-layer name="Street" lyr-type="tiles"&gt;&lt;/az-layer&gt;
+&lt;/div&gt;
+</pre>
+
+
+<h3>Lots of layers & options</h3>				
+<a href="examples/leafletMap_layers.html">leafletMap_layers.html</a>
+<pre class="prettyprint linenums" ng-non-bindable>
+&lt;div leaflet-map controls="layers"&gt;
+	&lt;az-layer name="Street" lyr-type="tiles" lyr-options="{isBaseLayer:true}"&gt;&lt;/az-layer&gt;
+	&lt;az-layer name="Aerial" lyr-type="tiles" lyr-url="http://otile{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.png"
+		is-base-layer="true"&gt;&lt;/az-layer&gt;
+	&lt;az-layer name="Radar"  lyr-type="wms" lyr-url="http://gis.srh.noaa.gov/ArcGIS/services/Radar_warnings/MapServer/WMSServer"
+		layers="0,1" version="1.3.0" crs="EPSG:102100" transparent="true" opacity="0.75"&gt;&lt;/az-layer&gt;
+	&lt;az-layer name="Airports" lyr-type="geojson" lyr-url="examples/data/airports.json"&gt;&lt;/az-layer&gt;
+&lt;/div&gt;
+</pre>
+		
+
+		</section>
+
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  </body>
+</html>
