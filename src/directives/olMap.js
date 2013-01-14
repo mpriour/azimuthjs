@@ -5,20 +5,20 @@
  */
 (function() {
 
-	var mod = angular.module('az.directives');
-
-	mod.directive('olMap', ['az.services.layers', '$parse', function(layerService, $parse) {
+angular.module('az.directives').
+	directive('olMap', ['az.config','az.services.layers', '$parse', function(config, layerService, $parse) {
+		var defaults = config.defaults;
 		return {
 			restrict: 'EA',
 			priority: -10,
 			link: function(scope, elem, attrs) {
 				var layers = layerService.getMapLayers();
-				var center = (attrs.center || '-99,38').split(',');
-				var zoom = attrs.zoom || 5;
-				var projection = attrs.projection || attrs.proj || attrs.crs || 'EPSG:3857';
-				var dispProj = attrs.dispProjection || attrs.dispProj || 'EPSG:4326';
-				var controls = (attrs.controls || 'zoom,navigation').split(',');
-				var controlOptions = (attrs.controlOpts && $parse(attrs.controlOpts)()) || {};
+				var center = attrs.center ? attrs.center.split(',') : defaults.CENTER.split(',').reverse();
+				var zoom = attrs.zoom || defaults.ZOOM;
+				var projection = attrs.projection || attrs.proj || attrs.crs || 'EPSG:'+defaults.CRS;
+				var dispProj = attrs.dispProjection || attrs.dispProj || 'EPSG:'+defaults.DISP_CRS;
+				var controls = (attrs.controls || defaults.OL_CONTROLS).split(',');
+				var controlOptions = angular.extend(defaults.OL_CTRL_OPTS, $parse(attrs.controlOpts)());
 				center = new OpenLayers.LonLat(center).transform('EPSG:4326',projection);
 				var mapCtls = [];
 				$.each(controls,function(i,ctl){

@@ -4,8 +4,8 @@
  * License: MIT
  */
 (function() {
-var service = angular.module('az.services',[]);
-service.factory('az.services.layers', function($rootScope) {
+angular.module('az.services').
+factory('az.services.layers', function($rootScope) {
     var layerService = {
     	layers: [],
     	getMapLayers: function(){

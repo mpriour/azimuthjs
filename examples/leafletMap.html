@@ -4,22 +4,23 @@
 	<title></title>
 	<base href="../"></base>
 	<style type="text/css">
-        html, body, div.olMap {
+        html, body, div.leaflet-container {
             margin: 0;
             width: 100%;
             height: 100%;
         }
     </style>
+	<link rel="stylesheet" type="text/css" href="../leaflet.0.4.5/leaflet.css">
 	<script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
-	<script type="text/javascript" src="../openlayers/OpenLayers.debug.js"></script>
+	<script type="text/javascript" src="../leaflet.0.4.5/leaflet-src.js"></script>
 	<script type="text/javascript" src="lib/angular/angular.js"></script>
 	<script type="text/javascript" src="src/module.js"></script>
 	<script type="text/javascript" src="src/services/component/layers.js"></script>
 	<script type="text/javascript" src="src/directives/layer.js"></script>
-	<script type="text/javascript" src="src/directives/olMap.js"></script>
+	<script type="text/javascript" src="src/directives/leafletMap.js"></script>
 </head>
 <body>
-	<div ol-map zoom="15" center="-0,51.48">
+	<div leaflet-map zoom="15" center="51.48,-0">
 		<az-layer name="streets" lyr-type="tiles"></az-layer>
 	</div>
 </body>
