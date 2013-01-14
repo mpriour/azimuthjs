@@ -15,12 +15,13 @@
 	<script type="text/javascript" src="lib/angular/angular.js"></script>
 	<script type="text/javascript" src="src/module.js"></script>
 	<script type="text/javascript" src="src/services/component/layers.js"></script>
-	<script type="text/javascript" src="src/directives/layer.js"></script>
+	<script type="text/javascript" src="src/directives/Layer.js"></script>
 	<script type="text/javascript" src="src/directives/olMap.js"></script>
 	
 </head>
 <body>
 <div ol-map controls="zoom,navigation,layerSwitcher,attribution,mousePosition" control-opts="{navigation:{handleRightClicks:true}}">
+	
 	<az-layer name="Street" lyr-type="tiles"></az-layer>
 	<az-layer name="Aerial" lyr-type="tiles" lyr-url="http://otile${s}.mqcdn.com/tiles/1.0.0/sat/${z}/${x}/${y}.png"></az-layer>
 	<az-layer name="Radar"  lyr-type="wms" lyr-url="http://gis.srh.noaa.gov/ArcGIS/services/Radar_warnings/MapServer/WMSServer"
