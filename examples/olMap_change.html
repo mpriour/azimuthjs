@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html ng-app="az">
+<head>
+	<title></title>
+	<base href="../"></base>
+	<style type="text/css">
+        html, body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+        }
+        div.olMap, div.info {
+            margin: 0;
+            width: 50%;
+            height: 50%;
+        }
+        .olMap{float:left;}
+        .info{float:right;}
+    </style>
+	<script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="../openlayers/OpenLayers.debug.js"></script>
+	<script type="text/javascript" src="lib/angular/angular.js"></script>
+	<script type="text/javascript" src="src/module.js"></script>
+	<script type="text/javascript" src="src/services/component/layers.js"></script>
+    <script type="text/javascript" src="src/services/component/map.js"></script>
+    <script type="text/javascript" src="src/directives/layer.js"></script>
+    <script type="text/javascript" src="src/directives/olMap.js"></script>
+</head>
+<body>
+<div ol-map="map" map_moveend>
+	<az-layer name="Street" lyr-type="tiles"></az-layer>
+</div>
+<div class="info">
+<ul>
+<li>Center: {{map.center.toShortString()}}</li>
+<li>Zoom: {{map.zoom}}</li>
+<li>Extent: {{map.getExtent().toString()}}</li>
+</ul>
+</div>
+</body>
+</html>
