@@ -25,9 +25,14 @@
     <script type="text/javascript" src="src/services/component/map.js"></script>
     <script type="text/javascript" src="src/directives/layer.js"></script>
     <script type="text/javascript" src="src/directives/olMap.js"></script>
+    <script type="text/javascript">
+        function maplog(e){
+            console.log(e.object);
+        }
+    </script>
 </head>
 <body>
-<div ol-map="map" map_moveend>
+<div ol-map="map" map_moveend="maplog">
 	<az-layer name="Street" lyr-type="tiles"></az-layer>
 </div>
 <div class="info">
