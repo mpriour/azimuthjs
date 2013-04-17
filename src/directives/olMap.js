@@ -6,8 +6,8 @@
 (function() {
 
 	angular.module('az.directives').
-	directive('olMap', ['az.config', 'az.services.layers', 'az.services.map', '$parse', 
-		function(config, layerService, mapService, $parse) {
+	directive('olMap', ['az.config', 'az.services.layers', /*'az.services.map',*/ '$parse', 
+		function(config, layerService, /*mapService,*/ $parse) {
 		var defaults = config.defaults;
 		return {
 			restrict: 'EA',
