@@ -1,4 +1,4 @@
-azimuthjs
+[AzimuthJS](http://mpriour.github.io/azimuthjs/)
 =========
 
-A geo webapp building companion to AngularJS
+A geo webapp building companion to AngularJS.
