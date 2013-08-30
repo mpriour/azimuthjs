@@ -17,17 +17,16 @@
         .olMap{float:left;}
         .info{float:right;}
     </style>
-	<script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
-	<script type="text/javascript" src="../openlayers/OpenLayers.debug.js"></script>
-	<script type="text/javascript" src="lib/angular/angular.js"></script>
-	<script type="text/javascript" src="src/module.js"></script>
-	<script type="text/javascript" src="src/services/component/layers.js"></script>
-    <script type="text/javascript" src="src/services/component/map.js"></script>
-    <script type="text/javascript" src="src/directives/layer.js"></script>
+    <script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="http://openlayers.org/dev/OpenLayers.js"></script>
+    <script type="text/javascript" src="lib/angular/angular.js"></script>
+    <script type="text/javascript" src="src/module.js"></script>
+    <script type="text/javascript" src="src/services/component/layers.js"></script>
+    <script type="text/javascript" src="src/directives/Layer.js"></script>
     <script type="text/javascript" src="src/directives/olMap.js"></script>
 </head>
 <body>
-<div ol-map="map">
+<div ol-map="map" map_moveend>
 	<az-layer name="Street" lyr-type="tiles"></az-layer>
 </div>
 <div class="info">
